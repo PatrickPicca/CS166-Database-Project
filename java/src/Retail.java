@@ -437,6 +437,7 @@ public class Retail {
    public static void placeProductSupplyRequests(Retail esql) 
    {
       //
+      
    }
 
 }//end Retail
