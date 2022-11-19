@@ -403,10 +403,41 @@ public class Retail {
    public static void placeOrder(Retail esql) {}
    public static void viewRecentOrders(Retail esql) {}
    public static void updateProduct(Retail esql) {}
-   public static void viewRecentUpdates(Retail esql) {}
-   public static void viewPopularProducts(Retail esql) {}
-   public static void viewPopularCustomers(Retail esql) {}
-   public static void placeProductSupplyRequests(Retail esql) {}
+
+   /*
+   Manager can also view the information of last 5 recent updates of his/her store(s).
+   */
+   public static void viewRecentUpdates(Retail esql) 
+   {
+      //Find most recent updates local to the store of the manager
+   }
+   /*
+   Popular product and customer: Manager will be able to see top 5 most popular products (product name) 
+      in his/her store(s) (Based on the order count of Product).
+   */
+   public static void viewPopularProducts(Retail esql) 
+   {
+      //Based on the store local to the manager, returns the 5 products whose order count are the highest.
+   }
+   /*
+   Manager can also view the top 5 customer’s information who placed the most orders in his/her store(s).
+   */
+   public static void viewPopularCustomers(Retail esql) 
+   {
+      //Based on the store local to the manager, return the 5 customers who has the most orders for that store.
+   }
+
+   /* 
+   • Put Supply Request: Manager can put product supply request for any product of his/her store(s).For that, 
+      they will need to input storeID, productName, number of units needed, and warehouseID of the warehouse 
+      which will supply the supply request. After placing the request we can assume that warehouse has enough
+      products to process the request. So Product table and ProductRequests table should be updated accordingly 
+      after placing the supply request.
+   */
+   public static void placeProductSupplyRequests(Retail esql) 
+   {
+      //
+   }
 
 }//end Retail
 
