@@ -34,6 +34,7 @@ public class Retail {
 
    // reference to physical database connection.
    private Connection _connection = null;
+   private int userId = 0;
 
    // handling the keyboard inputs through a BufferedReader
    // This variable can be global for convenience.
@@ -409,7 +410,8 @@ public class Retail {
    */
    public static void viewRecentUpdates(Retail esql) 
    {
-      //Find most recent updates local to the store of the manager
+      //Find most recent updates local to the store of the manager.
+      
    }
    /*
    Popular product and customer: Manager will be able to see top 5 most popular products (product name) 
@@ -438,7 +440,7 @@ public class Retail {
    {
       //
 
-      
+
    }
 
 }//end Retail
