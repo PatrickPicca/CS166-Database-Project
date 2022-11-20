@@ -34,6 +34,7 @@ public class Retail {
 
    // reference to physical database connection.
    private Connection _connection = null;
+   private int userID = 0;
 
    // handling the keyboard inputs through a BufferedReader
    // This variable can be global for convenience.
@@ -386,8 +387,8 @@ public class Retail {
          String password = in.readLine();
 
          String query = String.format("SELECT * FROM USERS WHERE name = '%s' AND password = '%s'", name, password);
-         int userNum = esql.executeQuery(query);
-	 if (userNum > 0)
+         this.useID = esql.executeQuery(query);
+	 if (this.userID > 0)
 		return name;
          return null;
       }catch(Exception e){
@@ -398,7 +399,9 @@ public class Retail {
 
 // Rest of the functions definition go in here
 
-   public static void viewStores(Retail esql) {}
+   public static void viewStores(Retail esql) {
+      
+   }
    public static void viewProducts(Retail esql) {}
    public static void placeOrder(Retail esql) {}
    public static void viewRecentOrders(Retail esql) {}
