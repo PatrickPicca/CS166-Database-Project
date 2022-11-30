@@ -34,7 +34,11 @@ public class Retail {
 
    // reference to physical database connection.
    private Connection _connection = null;
-   private int userID = 0;
+   private String userID = 0;
+   private String userName = 0;
+   private double userLat = 0;
+   private double userLong = 0;
+   private String userType = 0;
 
    // handling the keyboard inputs through a BufferedReader
    // This variable can be global for convenience.
@@ -387,9 +391,21 @@ public class Retail {
          String password = in.readLine();
 
          String query = String.format("SELECT * FROM USERS WHERE name = '%s' AND password = '%s'", name, password);
-         this.useID = esql.executeQuery(query);
-	 if (this.userID > 0)
-		return name;
+         List<List<String>> result = esql.executeQueryAndReturnResult(query);
+         this.userID = result.get(0).get(0);
+         this.userName = result.get(0).get(1);
+         this.userLat = Double.valueOf(result.get(0).get(3));
+         this.userLong = Double.valueOf(result.get(0).get(4));
+         this.userType = result.get(0).get(5);
+         System.out.println ("User successfully logged in\n");
+         System.out.println ("UserID: " + this.userID+ "!");
+         System.out.println ("Username:" + this.userName + "!");
+         System.out.println ("UserLat:" + this.userLat + "!");
+         System.out.println ("UserLong:" + this.userLong + "!");
+         System.out.println ("UserType:" + this.userType + "!");
+
+	      if (this.userID != 0)
+		      return name;
          return null;
       }catch(Exception e){
          System.err.println (e.getMessage ());
@@ -399,8 +415,13 @@ public class Retail {
 
 // Rest of the functions definition go in here
 
+   //View Stores within 30 miles
    public static void viewStores(Retail esql) {
-      
+      String query = "SELECT * FROM STORE";
+      List<List<String>> result = esql.executeQueryAndReturnResult(query);
+      for(int i = 0; i < result.size(); i++) {
+        if(calculateDistance())
+      }
    }
    public static void viewProducts(Retail esql) {}
    public static void placeOrder(Retail esql) {}
