@@ -395,10 +395,10 @@ public class Retail {
          userLat = Double.valueOf(result.get(0).get(3));
          userLong = Double.valueOf(result.get(0).get(4));
          userType = result.get(0).get(5);
-         System.out.println ("UserID: " + userID + '\n');
-         System.out.println ("UserLat: " + userLat + '\n');
-         System.out.println ("UserLong: " + userLong + '\n');
-         System.out.println ("UserType: " + userType + '\n');
+         // System.out.println ("UserID: " + userID + '\n');
+         // System.out.println ("UserLat: " + userLat + '\n');
+         // System.out.println ("UserLong: " + userLong + '\n');
+         // System.out.println ("UserType: " + userType + '\n');
 	      if (userID != "")
 		      return name;
          return null;
@@ -416,10 +416,10 @@ public class Retail {
       try{
          List<List<String>> result = esql.executeQueryAndReturnResult(query);
          System.out.println("\nStores within 30 miles of you: ");
-         System.out.println("StoreID\tStoreName\t\t\tStoreLat\tStoreLong\tManagerID\tDateEstablished");
+         System.out.println("Store ID\tStore Name\t\t\tStore Lat\tStore Long\tManager ID\tDate Established");
          for(int i = 0; i < result.size(); i++) {
             if(calculateDistance(userLat, userLong, Double.valueOf(result.get(i).get(2)), Double.valueOf(result.get(i).get(3))) <= 30) {
-                  System.out.println(result.get(i).get(0) + "\t" + result.get(i).get(1) + "\t" + result.get(i).get(2) + "\t" + result.get(i).get(3) + "\t" + result.get(i).get(4) + "\t\t" + result.get(i).get(5));
+                  System.out.println(result.get(i).get(0) + "\t\t" + result.get(i).get(1) + "\t" + result.get(i).get(2) + "\t" + result.get(i).get(3) + "\t" + result.get(i).get(4) + "\t\t" + result.get(i).get(5));
             }
          }
          System.out.println("\n");
@@ -427,7 +427,23 @@ public class Retail {
          System.err.println (e.getMessage ());
       }
    }
-   public static void viewProducts(Retail esql) {}
+
+   public static void viewProducts(Retail esql) {
+      try{
+         System.out.print("\tEnter store ID: ");
+         String storeID = in.readLine();
+         String query = String.format("SELECT * FROM PRODUCT WHERE storeID = '%s'", storeID);
+         List<List<String>> result = esql.executeQueryAndReturnResult(query);
+         System.out.println("\nProducts in store " + storeID + ": ");
+         System.out.println("Store ID\tProduct Name\t\t\tNumber of Units\t\tPrice Per Unit");
+         for(int i = 0; i < result.size(); i++) {
+            System.out.println(result.get(i).get(0) + "\t\t" + result.get(i).get(1) + "\t" + result.get(i).get(2) + "\t\t\t" + result.get(i).get(3));
+         }
+         System.out.println("\n");
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+      }
+   }
    public static void placeOrder(Retail esql) {}
    public static void viewRecentOrders(Retail esql) {}
    public static void updateProduct(Retail esql) {}
