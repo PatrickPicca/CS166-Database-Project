@@ -497,7 +497,7 @@ public class Retail {
          }
       }while(true);
       //NOTE: if trigget is used, orderNum can be removed from the query
-      query = String.format("INSERT INTO Orders(customerID, storeID, productName, unitsOrdered) Values (%s, %s, %s, %d)", userID, storeID, productName, numUnits);
+      query = String.format("INSERT INTO Orders(customerID, storeID, productName, unitsOrdered) Values (%s, %s, \'%s\', %d);", userID, storeID, productName, numUnits);
       try{
          esql.executeUpdate(query);
          System.out.println("\tOrder successfully placed!\n");
@@ -505,7 +505,23 @@ public class Retail {
          System.err.println (e.getMessage ());
       }
    }
-   public static void viewRecentOrders(Retail esql) {}
+   public static void viewRecentOrders(Retail esql) {
+      String query = String.format("SELECT * FROM Orders WHERE customerID = %s ORDER BY orderTime", userID);
+      try{
+         System.out.println("Executing query: " + query);
+         List<List<String>> result = esql.executeQueryAndReturnResult(query);
+         System.out.println("\nFive of your most recent orders: ");
+         System.out.println("Store ID\tStore Name\t\t\tProduct Name\t\t\tNumber of Units\t\tOrder Time");
+         int numOrders = (result.size() < 5) ? result.size() : 5;
+         for(int i = 0; i < numOrders; i++) {
+            String storeName = esql.executeQueryAndReturnResult(String.format("SELECT name FROM STORE WHERE storeID = '%s'", result.get(i).get(2))).get(0).get(0);
+            System.out.println(result.get(i).get(2) + "\t\t" + storeName + "\t\t" + result.get(i).get(3) + "\t\t" + result.get(i).get(4) + "\t\t" + result.get(i).get(5));
+         }
+         System.out.println("\n");
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+      }
+   }
    public static void updateProduct(Retail esql) {}
    public static void viewRecentUpdates(Retail esql) {}
    public static void viewPopularProducts(Retail esql) {}
