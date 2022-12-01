@@ -444,7 +444,67 @@ public class Retail {
          System.err.println (e.getMessage ());
       }
    }
-   public static void placeOrder(Retail esql) {}
+   //NOTE: A trigger can be used here to update the order number each time an order is inserted
+   public static void placeOrder(Retail esql) {
+      String storeID = "";
+      String productName = "";
+      int numUnits = 0;
+      int result = 0;
+      String query = "";
+      System.out.print("\tEnter store ID: ");
+      do{
+         try{
+            storeID = in.readLine();
+            query = String.format("SELECT * FROM STORE WHERE storeID = '%s'", storeID);
+            result = esql.executeQuery(query);
+            if(result <= 0){
+               System.out.println("\tStore ID does not exist. Please enter a valid store ID: ");
+            }else{
+               break;
+            }
+         }catch(Exception e){
+            System.err.println (e.getMessage ());
+         }
+      }while(true);
+      System.out.print("\tEnter product name: ");
+      do{
+         try{
+            productName = in.readLine();
+            query = String.format("SELECT * FROM PRODUCT WHERE storeID = '%s' AND productName = '%s'", storeID, productName);
+            result = esql.executeQuery(query);
+            if(result <= 0) {
+               System.out.println("\tProduct not found. Please enter a valid product name: ");
+            }
+            else {
+               break;
+            }
+         }catch(Exception e){
+            System.err.println (e.getMessage ());
+         }
+      }while(true);
+      System.out.print("\tEnter number of units: ");
+      do{
+         try{
+            numUnits = Integer.valueOf(in.readLine());
+            if(numUnits < 0) {
+               System.out.println("\tInvalid number of units. Please enter a positive number.");
+            }
+            else {
+               break;
+            }
+         }catch(Exception e){
+            System.err.println (e.getMessage ());
+         }
+      }while(true);
+      //NOTE: if trigget is used, orderNum can be removed from the query
+      query = String.format("INSERT INTO Orders(customerID, storeID, productName, unitsOrdered) Values (%s, %s, %s, %d)", userID, storeID, productName, numUnits);
+      try{
+         esql.executeUpdate(query);
+         System.out.println("\tOrder successfully placed!\n");
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+      }
+   }
    public static void viewRecentOrders(Retail esql) {}
    public static void updateProduct(Retail esql) {}
    public static void viewRecentUpdates(Retail esql) {}
