@@ -7,10 +7,10 @@ export PATH=$JAVA_HOME/bin:$PATH
 export CLASSPATH=$CLASSPATH:$(git rev-parse --show-toplevel)/java/lib/pg73jdbc3.jar
 
 # compile the java program
-javac -d "$PWD" $(git rev-parse --show-toplevel)/java/src/Retail.java
-
+#javac -d "$(git rev-parse --show-toplevel)/java/classes" "$(git rev-parse --show-toplevel)/java/src/Retail.java"
+javac -d "$PWD" "$(git rev-parse --show-toplevel)/java/src/Retail.java"
 #run the java program
 #Use your database name, port number and login
-
+cd "$(git rev-parse --show-toplevel)/java/classes"
 java Retail $USER"_DB" 8192 $USER
-
+cd "$(git rev-parse --show-toplevel)/sql/scripts"
