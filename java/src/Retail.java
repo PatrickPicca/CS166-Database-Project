@@ -34,8 +34,11 @@ public class Retail {
 
    // reference to physical database connection.
    private Connection _connection = null;
-   private int userID = 0;
-
+   private static String userID = "";
+   private static String userName = "";
+   private static double userLat = 0;
+   private static double userLong = 0;
+   private static String userType = "";
    // handling the keyboard inputs through a BufferedReader
    // This variable can be global for convenience.
    static BufferedReader in = new BufferedReader(
@@ -69,7 +72,7 @@ public class Retail {
    }//end Retail
 
    // Method to calculate euclidean distance between two latitude, longitude pairs. 
-   public double calculateDistance (double lat1, double long1, double lat2, double long2){
+   public static double calculateDistance (double lat1, double long1, double lat2, double long2){
       double t1 = (lat1 - lat2) * (lat1 - lat2);
       double t2 = (long1 - long2) * (long1 - long2);
       return Math.sqrt(t1 + t2); 
@@ -387,9 +390,17 @@ public class Retail {
          String password = in.readLine();
 
          String query = String.format("SELECT * FROM USERS WHERE name = '%s' AND password = '%s'", name, password);
-         this.useID = esql.executeQuery(query);
-	 if (this.userID > 0)
-		return name;
+         List<List<String>> result = esql.executeQueryAndReturnResult(query);
+         userID = result.get(0).get(0);
+         userLat = Double.valueOf(result.get(0).get(3));
+         userLong = Double.valueOf(result.get(0).get(4));
+         userType = result.get(0).get(5);
+         // System.out.println ("UserID: " + userID + '\n');
+         // System.out.println ("UserLat: " + userLat + '\n');
+         // System.out.println ("UserLong: " + userLong + '\n');
+         // System.out.println ("UserType: " + userType + '\n');
+	      if (userID != "")
+		      return name;
          return null;
       }catch(Exception e){
          System.err.println (e.getMessage ());
@@ -399,11 +410,101 @@ public class Retail {
 
 // Rest of the functions definition go in here
 
+   //View Stores within 30 miles
    public static void viewStores(Retail esql) {
-      
+      String query = "SELECT * FROM STORE";
+      try{
+         List<List<String>> result = esql.executeQueryAndReturnResult(query);
+         System.out.println("\nStores within 30 miles of you: ");
+         System.out.println("Store ID\tStore Name\t\t\tStore Lat\tStore Long\tManager ID\tDate Established");
+         for(int i = 0; i < result.size(); i++) {
+            if(calculateDistance(userLat, userLong, Double.valueOf(result.get(i).get(2)), Double.valueOf(result.get(i).get(3))) <= 30) {
+                  System.out.println(result.get(i).get(0) + "\t\t" + result.get(i).get(1) + "\t" + result.get(i).get(2) + "\t" + result.get(i).get(3) + "\t" + result.get(i).get(4) + "\t\t" + result.get(i).get(5));
+            }
+         }
+         System.out.println("\n");
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+      }
    }
-   public static void viewProducts(Retail esql) {}
-   public static void placeOrder(Retail esql) {}
+
+   public static void viewProducts(Retail esql) {
+      try{
+         System.out.print("\tEnter store ID: ");
+         String storeID = in.readLine();
+         String query = String.format("SELECT * FROM PRODUCT WHERE storeID = '%s'", storeID);
+         List<List<String>> result = esql.executeQueryAndReturnResult(query);
+         System.out.println("\nProducts in store " + storeID + ": ");
+         System.out.println("Store ID\tProduct Name\t\t\tNumber of Units\t\tPrice Per Unit");
+         for(int i = 0; i < result.size(); i++) {
+            System.out.println(result.get(i).get(0) + "\t\t" + result.get(i).get(1) + "\t" + result.get(i).get(2) + "\t\t\t" + result.get(i).get(3));
+         }
+         System.out.println("\n");
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+      }
+   }
+   //NOTE: A trigger can be used here to update the order number each time an order is inserted
+   public static void placeOrder(Retail esql) {
+      String storeID = "";
+      String productName = "";
+      int numUnits = 0;
+      int result = 0;
+      String query = "";
+      System.out.print("\tEnter store ID: ");
+      do{
+         try{
+            storeID = in.readLine();
+            query = String.format("SELECT * FROM STORE WHERE storeID = '%s'", storeID);
+            result = esql.executeQuery(query);
+            if(result <= 0){
+               System.out.println("\tStore ID does not exist. Please enter a valid store ID: ");
+            }else{
+               break;
+            }
+         }catch(Exception e){
+            System.err.println (e.getMessage ());
+         }
+      }while(true);
+      System.out.print("\tEnter product name: ");
+      do{
+         try{
+            productName = in.readLine();
+            query = String.format("SELECT * FROM PRODUCT WHERE storeID = '%s' AND productName = '%s'", storeID, productName);
+            result = esql.executeQuery(query);
+            if(result <= 0) {
+               System.out.println("\tProduct not found. Please enter a valid product name: ");
+            }
+            else {
+               break;
+            }
+         }catch(Exception e){
+            System.err.println (e.getMessage ());
+         }
+      }while(true);
+      System.out.print("\tEnter number of units: ");
+      do{
+         try{
+            numUnits = Integer.valueOf(in.readLine());
+            if(numUnits < 0) {
+               System.out.println("\tInvalid number of units. Please enter a positive number.");
+            }
+            else {
+               break;
+            }
+         }catch(Exception e){
+            System.err.println (e.getMessage ());
+         }
+      }while(true);
+      //NOTE: if trigget is used, orderNum can be removed from the query
+      query = String.format("INSERT INTO Orders(customerID, storeID, productName, unitsOrdered) Values (%s, %s, %s, %d)", userID, storeID, productName, numUnits);
+      try{
+         esql.executeUpdate(query);
+         System.out.println("\tOrder successfully placed!\n");
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+      }
+   }
    public static void viewRecentOrders(Retail esql) {}
    public static void updateProduct(Retail esql) {}
 
