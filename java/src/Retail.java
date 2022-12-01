@@ -521,7 +521,104 @@ public class Retail {
          System.err.println (e.getMessage ());
       }
    }
-   public static void updateProduct(Retail esql) {}
+   public static void updateProduct(Retail esql) {
+      if(userType.equals("manager") || userType.equals("admin")) {
+         System.out.println("\n\tERROR: You do not have permission to update products!\n");
+         return;
+      }
+      System.out.print("\tEnter store ID: ");
+      String storeID = "";
+      String query = "";
+      int result = 0;
+      do{
+         try{
+            storeID = in.readLine();
+            query = String.format("SELECT * FROM STORE WHERE storeID = '%s' AND managerID = '%s'", storeID, userID);
+            result = esql.executeQuery(query);
+            if(result <= 0) {
+               System.out.print("\tYou are not the manager of this store. Please enter a valid store ID: ");
+            }
+            else {
+               break;
+            }
+         }catch(Exception e){
+            System.err.println (e.getMessage ());
+         }
+      }while(true);
+      System.out.print("\tEnter product name: ");
+      String productName = "";
+      do{
+         try{
+            productName = in.readLine();
+            query = String.format("SELECT * FROM PRODUCT WHERE storeID = '%s' AND productName = '%s'", storeID, productName);
+            result = esql.executeQuery(query);
+            if(result <= 0) {
+               System.out.print("\tProduct not found. Please enter a valid product name: ");
+            }
+            else {
+               break;
+            }
+         }catch(Exception e){
+            System.err.println (e.getMessage ());
+         }
+      }while(true);
+      int input = 0;
+      do{
+         System.out.print("\tWhat would you like to update? (1) Number of units (2) Price per unit: ");
+         try{
+            input = Integer.valueOf(in.readLine());
+            if(input != 1 && input != 2) {
+               System.out.println("\tInvalid input. Please enter 1 or 2.");
+            }
+            else {
+               break;
+            }
+         }catch(Exception e){
+            System.err.println (e.getMessage ());
+         }
+      }while(true);
+      if(input == 1) {
+         System.out.print("\tEnter new number of units: ");
+         do{
+            try{
+               input = Integer.valueOf(in.readLine());
+               if(input < 0) {
+                  System.out.print("\tInvalid number of units. Please enter a positive number: ");
+               }
+               else {
+                  break;
+               }
+            }catch(Exception e){
+               System.err.println (e.getMessage ());
+            }
+         }while(true);
+         query = String.format("UPDATE PRODUCT SET numberOfUnits = %d WHERE storeID = '%s' AND productName = '%s'", input, storeID, productName);
+      }
+      else {
+         System.out.print("\tEnter new price per unit: ");
+         double price = 0.0;
+         do{
+            try{
+               price = Double.valueOf(in.readLine());
+               if(price < 0) {
+                  System.out.print("\tInvalid price. Please enter a positive number: ");
+               }
+               else {
+                  break;
+               }
+            }catch(Exception e){
+               System.err.println (e.getMessage ());
+            }
+         }while(true);
+         query = String.format("UPDATE PRODUCT SET pricePerUnit = %f WHERE storeID = '%s' AND productName = '%s'", price, storeID, productName);
+      }
+      try{
+         esql.executeUpdate(query);
+         System.out.println("\n\tProduct successfully updated!\n");
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+      }
+   }
    public static void viewRecentUpdates(Retail esql) {}
    public static void viewPopularProducts(Retail esql) {}
    public static void viewPopularCustomers(Retail esql) {}
