@@ -34,7 +34,11 @@ public class Retail {
 
    // reference to physical database connection.
    private Connection _connection = null;
-
+   private static String userID = "";
+   private static String userName = "";
+   private static double userLat = 0;
+   private static double userLong = 0;
+   private static String userType = "";
    // handling the keyboard inputs through a BufferedReader
    // This variable can be global for convenience.
    static BufferedReader in = new BufferedReader(
@@ -373,10 +377,6 @@ public class Retail {
       }
    }//end CreateUser
 
-   
-
-   public static 
-
 
    /*
     * Check log in credentials for an existing user
@@ -391,8 +391,15 @@ public class Retail {
 
          String query = String.format("SELECT * FROM USERS WHERE name = '%s' AND password = '%s'", name, password);
          List<List<String>> result = esql.executeQueryAndReturnResult(query);
-
-	      if (this.userID != 0)
+         userID = result.get(0).get(0);
+         userLat = Double.valueOf(result.get(0).get(3));
+         userLong = Double.valueOf(result.get(0).get(4));
+         userType = result.get(0).get(5);
+         System.out.println ("UserID: " + userID + '\n');
+         System.out.println ("UserLat: " + userLat + '\n');
+         System.out.println ("UserLong: " + userLong + '\n');
+         System.out.println ("UserType: " + userType + '\n');
+	      if (userID != "")
 		      return name;
          return null;
       }catch(Exception e){
@@ -405,11 +412,11 @@ public class Retail {
 
    //View Stores within 30 miles
    public static void viewStores(Retail esql) {
-      String query = "SELECT * FROM STORE";
-      List<List<String>> result = esql.executeQueryAndReturnResult(query);
-      for(int i = 0; i < result.size(); i++) {
+      // String query = "SELECT * FROM STORE";
+      //List<List<String>> result = esql.executeQueryAndReturnResult(query);
+      // for(int i = 0; i < result.size(); i++) {
         //if(calculateDistance())
-      }
+      // }
    }
    public static void viewProducts(Retail esql) {}
    public static void placeOrder(Retail esql) {}

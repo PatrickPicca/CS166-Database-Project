@@ -1,5 +1,5 @@
 COPY Users
-FROM '/home/csmajs/tlian020/VirtualBox VMs/CS166-Database-Project-Phase-3/data/datausers.csv'
+FROM '/home/csmajs/tlian020/VirtualBox VMs/CS166-Database-Project-Phase-3/data/users.csv'
 WITH DELIMITER ',' CSV HEADER;
 ALTER SEQUENCE users_userID_seq RESTART 101;
 

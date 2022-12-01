@@ -7,9 +7,10 @@ export PATH=$JAVA_HOME/bin:$PATH
 export CLASSPATH=$CLASSPATH:/home/csmajs/tlian020/VirtualBox\ VMs/CS166-Database-Project-Phase-3/java/lib/pg73jdbc3.jar
 
 # compile the java program
-javac /home/csmajs/tlian020/VirtualBox\ VMs/CS166-Database-Project-Phase-3/java/src/Retail.java
+javac -d "$PWD" /home/csmajs/tlian020/VirtualBox\ VMs/CS166-Database-Project-Phase-3/java/src/Retail.java
 
 #run the java program
 #Use your database name, port number and login
-java Retail "tlian020_DB" 8192 "tlian020"
+
+java Retail $USER"_DB" 8192 $USER
 
