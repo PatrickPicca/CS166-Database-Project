@@ -72,7 +72,7 @@ public class Retail {
    }//end Retail
 
    // Method to calculate euclidean distance between two latitude, longitude pairs. 
-   public double calculateDistance (double lat1, double long1, double lat2, double long2){
+   public static double calculateDistance (double lat1, double long1, double lat2, double long2){
       double t1 = (lat1 - lat2) * (lat1 - lat2);
       double t2 = (long1 - long2) * (long1 - long2);
       return Math.sqrt(t1 + t2); 
@@ -412,11 +412,20 @@ public class Retail {
 
    //View Stores within 30 miles
    public static void viewStores(Retail esql) {
-      // String query = "SELECT * FROM STORE";
-      //List<List<String>> result = esql.executeQueryAndReturnResult(query);
-      // for(int i = 0; i < result.size(); i++) {
-        //if(calculateDistance())
-      // }
+      String query = "SELECT * FROM STORE";
+      try{
+         List<List<String>> result = esql.executeQueryAndReturnResult(query);
+         System.out.println("\nStores within 30 miles of you: ");
+         System.out.println("StoreID\tStoreName\t\t\tStoreLat\tStoreLong\tManagerID\tDateEstablished");
+         for(int i = 0; i < result.size(); i++) {
+            if(calculateDistance(userLat, userLong, Double.valueOf(result.get(i).get(2)), Double.valueOf(result.get(i).get(3))) <= 30) {
+                  System.out.println(result.get(i).get(0) + "\t" + result.get(i).get(1) + "\t" + result.get(i).get(2) + "\t" + result.get(i).get(3) + "\t" + result.get(i).get(4) + "\t\t" + result.get(i).get(5));
+            }
+         }
+         System.out.println("\n");
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+      }
    }
    public static void viewProducts(Retail esql) {}
    public static void placeOrder(Retail esql) {}
