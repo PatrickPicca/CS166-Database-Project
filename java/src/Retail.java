@@ -558,7 +558,6 @@ public class Retail {
       }
    }
 
-
    /* 
    • Put Supply Request: Manager can put product supply request for any product of his/her store(s).For that, 
       they will need to input storeID, productName, number of units needed, and warehouseID of the warehouse 
