@@ -289,7 +289,10 @@ public class Retail {
                 System.out.println("7. View 5 Popular Items");
                 System.out.println("8. View 5 Popular Customers");
                 System.out.println("9. Place Product Supply Request to Warehouse");
-
+               
+                System.out.println("10. ADMIN ONLY: View User Info");
+                System.out.println("11. ADMIN ONLY: Update User Info");
+                System.out.println("12. ADMIN ONLY: Delete User");
                 System.out.println(".........................");
                 System.out.println("20. Log out");
                 switch (readChoice()){
@@ -395,10 +398,12 @@ public class Retail {
          userLat = Double.valueOf(result.get(0).get(3));
          userLong = Double.valueOf(result.get(0).get(4));
          userType = result.get(0).get(5);
+         //System.out.println(userType.size());
+         System.out.println(userType.length());
          // System.out.println ("UserID: " + userID + '\n');
          // System.out.println ("UserLat: " + userLat + '\n');
          // System.out.println ("UserLong: " + userLong + '\n');
-         // System.out.println ("UserType: " + userType + '\n');
+         System.out.println ("UserType: " + userType + '\n');
 	      if (userID != "")
 		      return name;
          return null;
@@ -522,7 +527,7 @@ public class Retail {
       }
    }
    public static void updateProduct(Retail esql) {
-      if(userType.equals("manager") || userType.equals("admin")) {
+      if(!userType.contains("manager") || !userType.contains("admin")) {
          System.out.println("\n\tERROR: You do not have permission to update products!\n");
          return;
       }
@@ -535,7 +540,7 @@ public class Retail {
             storeID = in.readLine();
             query = String.format("SELECT * FROM STORE WHERE storeID = '%s' AND managerID = '%s'", storeID, userID);
             result = esql.executeQuery(query);
-            if(result <= 0) {
+            if(result <= 0 && userType.contains("manager")) { //Only managers need to check if they are the manager of the store
                System.out.print("\tYou are not the manager of this store. Please enter a valid store ID: ");
             }
             else {
@@ -623,6 +628,38 @@ public class Retail {
    public static void viewPopularProducts(Retail esql) {}
    public static void viewPopularCustomers(Retail esql) {}
    public static void placeProductSupplyRequests(Retail esql) {}
+   
+   /*
+   Admin: Admins will be able view and update the information of all users and 
+   products information of the database
+    */
+   public static void viewUserInfo(Retail esql) {}
+   public static void updateUserInfo(Retail esql){}
+   public static void viewAllProducts(Retail esql) {
+      if(!userType.contains("admin")) {
+         System.out.println("\n\tERROR: You do not have permission to view all products!\n");
+         return;
+      }
+      String query = "SELECT * FROM PRODUCT";
+      try{
+         List<List<String>> result = esql.executeQueryAndReturnResult(query);
+         System.out.println("\nAll products: ");
+         System.out.println("Product Name\t\tStore ID\t\tNumber of Units\t\tPrice per Unit");
+         for(int i = 0; i < result.size(); i++) {
+            System.out.println(result.get(i).get(0) + "\t\t" + result.get(i).get(1) + "\t\t" + result.get(i).get(2) + "\t\t" + result.get(i).get(3));
+         }
+         System.out.println("\n");
+      }catch(Exception e){
+         System.err.println (e.getMessage ());
+      }
+   }
+   public static void updateProductInfo(Retail esql){}
+
+   /*
+   Manager can see all the orders information of the store(s) he/she
+   manages. They will be able to see orderID, customer name, storeID, productName, 
+   and date of order for each order.
+    */
+
 
 }//end Retail
-
