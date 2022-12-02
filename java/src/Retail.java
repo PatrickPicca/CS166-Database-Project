@@ -539,7 +539,7 @@ public class Retail {
             System.err.println (e.getMessage ());
          }
       }
-   }
+   } 
    /*
    Manager can also view the top 5 customer’s information who placed the most orders in his/her store(s).
    */
