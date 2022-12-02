@@ -558,6 +558,7 @@ public class Retail {
          System.err.println (e.getMessage ());
       }
    }
+   
 
    /* 
    • Put Supply Request: Manager can put product supply request for any product of his/her store(s).For that, 
