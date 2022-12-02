@@ -536,7 +536,6 @@ public class Retail {
          
          System.err.println (e.getMessage ());
       }
-      
    }
    /*
    Manager can also view the top 5 customer’s information who placed the most orders in his/her store(s).
@@ -558,7 +557,7 @@ public class Retail {
          System.err.println (e.getMessage ());
       }
    }
-   
+
 
    /* 
    • Put Supply Request: Manager can put product supply request for any product of his/her store(s).For that, 
