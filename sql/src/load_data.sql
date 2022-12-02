@@ -1,32 +1,32 @@
 COPY Users
-FROM '/extra/wpicc001/CS166-Database-Project-Phase-3/data/users.csv'
+FROM '/extra/tlian020/VirtualBox VMs/CS166-Database-Project-Phase-3/data/users.csv'
 WITH DELIMITER ',' CSV HEADER;
-ALTER SEQUENCE users_userID_seq RESTART 101;
+ALTER SEQUENCE users_userID_seq RESTART 100;
 
 COPY Store
-FROM '/extra/wpicc001/CS166-Database-Project-Phase-3/data/stores.csv'
+FROM '/extra/tlian020/VirtualBox VMs/CS166-Database-Project-Phase-3/data/stores.csv'
 WITH DELIMITER ',' CSV HEADER;
 
 COPY Product
-FROM '/extra/wpicc001/CS166-Database-Project-Phase-3/data/products.csv'
+FROM '/extra/tlian020/VirtualBox VMs/CS166-Database-Project-Phase-3/data/products.csv'
 WITH DELIMITER ',' CSV HEADER;
 
 COPY Warehouse
-FROM '/extra/wpicc001/CS166-Database-Project-Phase-3/data/warehouse.csv'
+FROM '/extra/tlian020/VirtualBox VMs/CS166-Database-Project-Phase-3/data/warehouse.csv'
 WITH DELIMITER ',' CSV HEADER;
 
 COPY Orders
-FROM '/extra/wpicc001/CS166-Database-Project-Phase-3/data/orders.csv'
+FROM '/extra/tlian020/VirtualBox VMs/CS166-Database-Project-Phase-3/data/orders.csv'
 WITH DELIMITER ',' CSV HEADER;
-ALTER SEQUENCE orders_orderNumber_seq RESTART 501;
+ALTER SEQUENCE orders_orderNumber_seq RESTART 500;
 
 
 COPY ProductSupplyRequests
-FROM '/extra/wpicc001/CS166-Database-Project-Phase-3/data/productSupplyRequests.csv'
+FROM '/extra/tlian020/VirtualBox VMs/CS166-Database-Project-Phase-3/data/productSupplyRequests.csv'
 WITH DELIMITER ',' CSV HEADER;
-ALTER SEQUENCE productsupplyrequests_requestNumber_seq RESTART 11;
+ALTER SEQUENCE productsupplyrequests_requestNumber_seq RESTART 10;
 
 COPY ProductUpdates
-FROM '/extra/wpicc001/CS166-Database-Project-Phase-3/data/productUpdates.csv'
+FROM '/extra/tlian020/VirtualBox VMs/CS166-Database-Project-Phase-3/data/productUpdates.csv'
 WITH DELIMITER ',' CSV HEADER;
-ALTER SEQUENCE productupdates_updateNumber_seq RESTART 51;
+ALTER SEQUENCE productupdates_updateNumber_seq RESTART 50;
