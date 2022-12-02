@@ -514,6 +514,8 @@ public class Retail {
    public static void viewRecentUpdates(Retail esql) 
    {
       //Find most recent updates local to the store of the manager
+
+ 
    }
    /*
    Popular product and customer: Manager will be able to see top 5 most popular products (product name) 
@@ -521,14 +523,46 @@ public class Retail {
    */
    public static void viewPopularProducts(Retail esql) 
    {
-      //Based on the store local to the manager, returns the 5 products whose order count are the highest.
-   }
+      if (userType.contains("manager"))
+      {
+         try{
+            String query = String.format("SELECT O.productName, SUM(O.unitsOrdered) AS totalUnitsOrdered FROM ORDERS O WHERE O.storeID IN (SELECT S.storeID FROM Store S WHERE S.managerID = %s) GROUP BY O.productName ORDER BY SUM(O.unitsOrdered) DESC LIMIT 5", userID);
+            List<List<String>> result = esql.executeQueryAndReturnResult(query);
+            System.out.println("Product Name");
+            for(int i = 0; i < result.size(); i++) {
+
+               System.out.println(result.get(i).get(0));
+            }
+            System.out.println("\n");
+         }catch(Exception e){
+            
+            System.err.println (e.getMessage ());
+         }
+      }
+   } 
    /*
    Manager can also view the top 5 customer’s information who placed the most orders in his/her store(s).
    */
    public static void viewPopularCustomers(Retail esql) 
    {
-      //Based on the store local to the manager, return the 5 customers who has the most orders for that store.
+      if(userType.contains("manager"))
+      {
+         //   System.out.println("This is a manager!");
+         //Based on the store local to the manager, return the 5 customers who has the most orders for that store.
+         try{
+            String query = String.format("SELECT U.userID, U.name, U.password, U.longitude, U.latitude FROM ORDERS O, USERS U WHERE U.userID = O.customerID AND O.storeID  IN (	SELECT S.storeID FROM Store S WHERE S.managerID = %s)GROUP BY U.userID ORDER BY COUNT(*) DESC LIMIT 5", userID);
+            List<List<String>> result = esql.executeQueryAndReturnResult(query);
+            System.out.println("User ID\t\tUser Name\t\t\t\tUser Password\t\t\tUser Longitude\t\tUser Latitude");
+            for(int i = 0; i < result.size(); i++) {
+               //System.out.println(result.get(i).get(0));
+               System.out.println(result.get(i).get(0) + "\t\t" + result.get(i).get(1)  + result.get(i).get(2)  + "\t\t" + result.get(i).get(3)  + "\t\t" + result.get(i).get(4));
+            }
+            System.out.println("\n");
+         }catch(Exception e){
+            
+            System.err.println (e.getMessage ());
+         }
+      }
    }
 
    /* 
