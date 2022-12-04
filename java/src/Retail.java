@@ -514,7 +514,22 @@ public class Retail {
    public static void viewRecentUpdates(Retail esql) 
    {
       //Find most recent updates local to the store of the manager
+      if (userType.contains("manager"))
+      {
+         try{
+            String query = String.format("SELECT P.productName, P.storeID, P.managerID, P.updateNumber, P.updatedOn FROM ProductUpdates P  WHERE P.storeID IN ( SELECT S.storeID FROM Store S WHERE S.managerID = %s) ORDER BY P.updatedOn DESC LIMIT 5", userID);
+            List<List<String>> result = esql.executeQueryAndReturnResult(query);
+            System.out.println("Product Name\t\tStore ID\t\tManager ID\tUpdate Number\tUpdated ON");
+            for(int i = 0; i < result.size(); i++) {
 
+               System.out.println(result.get(i).get(0) + "\t" + result.get(i).get(1) + "\t\t" + result.get(i).get(2)  + "\t\t" + result.get(i).get(3)  + "\t\t" + result.get(i).get(4));
+            }
+            System.out.println("\n");
+         }catch(Exception e){
+            
+            System.err.println (e.getMessage ());
+         }
+      }
  
    }
    /*
