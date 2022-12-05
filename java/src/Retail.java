@@ -791,7 +791,78 @@ public class Retail {
    products information of the database
     */
    public static void viewUserInfo(Retail esql) {}
-   public static void updateUserInfo(Retail esql){}
+   public static void updateUserInfo(Retail esql){
+      if(!userType.contains("admin")){
+         System.out.println("You do not have permission to update user information.");
+         return;
+      }
+      String ID = "";
+      String  attribute = "";
+      String update = "";
+      do{
+         System.out.print("\tEnter user ID of the user you wish to update: ");
+         do{
+            try{
+               ID = in.readLine();
+               String query = String.format("SELECT * FROM Users WHERE userID = '%s'", userID);
+               int result = esql.executeQuery(query);
+               if(result <= 0){
+                  System.out.print("\tUser ID does not exist. Please enter a valid user ID:");
+                  continue;
+               }
+               break;
+            }catch(Exception e){
+               System.err.println (e.getMessage ());
+            }
+         }while(true);
+         System.out.print("\tEnter the attribute you wish to update \n\t(name, password, latitude, longitude, type): ");
+         do{
+            attribute = in.readLine();
+            if(!attribute.equals("name") && !attribute.equals("password") && !attribute.equals("latitude") && !attribute.equals("longitude") && !attribute.equals("type")){
+               System.out.print("\tInvalid attribute. Please enter a valid attribute:");
+               continue;
+            }
+            break;
+         }while(true);
+         System.out.printf("\tEnter the new value for the attribute %s: ", attribute);
+         do{
+            update = in.readLine();
+            if(attribute.equals("latitude") || attribute.equals("longitude")){
+               try{
+                  Double.parseDouble(update);
+               }catch(Exception e){
+                  System.out.print("\tInvalid value. Please enter a valid decimal value:");
+                  continue;
+               }
+            }
+            if(attribute.equals("type")){
+               if(!update.equals("admin") && !update.equals("manager") && !update.equals("customer")){
+                  System.out.print("\tInvalid type. Please enter a valid type:");
+                  continue;
+               }
+            }
+            if(attribute.equals("name")){
+               if(update.length() > 50 || update.length() < 1){
+                  System.out.print("\tThe length of the name must be between 1 and 50 characters. Please enter a valid value:");
+                  continue;
+               }
+            }
+            break;
+         }while(true);
+         String query = String.format("UPDATE Users SET %s = '%s' WHERE userID = '%s'", attribute, update, ID);
+         try{
+            esql.executeUpdate(query);
+            System.out.println("\tUser information updated!");
+            System.out.print("\tWould you like to update another user? (y/n): ");
+            String answer = in.readLine();
+            if(answer.equals("n")){
+               break;
+            }
+         }catch(Exception e){
+            System.err.println (e.getMessage ());
+         }
+      }while(true);
+   }
    public static void viewAllProducts(Retail esql) {
       if(!userType.contains("admin")) {
          System.out.println("\n\tERROR: You do not have permission to view all products!\n");
