@@ -282,13 +282,14 @@ public class Retail {
                 System.out.println("2. View Product List");
                 System.out.println("3. Place a Order");
                 System.out.println("4. View 5 recent orders");
-
+              // if (userType.contains("manager"))
                 //the following functionalities basically used by managers
                 System.out.println("5. Update Product");
                 System.out.println("6. View 5 recent Product Updates Info");
                 System.out.println("7. View 5 Popular Items");
                 System.out.println("8. View 5 Popular Customers");
                 System.out.println("9. Place Product Supply Request to Warehouse");
+           //     System.out.println("10. View all Orders");
 
                 System.out.println(".........................");
                 System.out.println("20. Log out");
@@ -302,6 +303,7 @@ public class Retail {
                    case 7: viewPopularProducts(esql); break;
                    case 8: viewPopularCustomers(esql); break;
                    case 9: placeProductSupplyRequests(esql); break;
+              //     case 10: viewAllOrders(esql); break;
 
                    case 20: usermenu = false; break;
                    default : System.out.println("Unrecognized choice!"); break;
@@ -595,8 +597,39 @@ public class Retail {
       if (userType.contains("manager"))
       {
          try{
-            System.out.print("\tEnter store ID: ");
-            String storeID = in.readLine();
+            String query;
+            String storeID;
+            int result = 0;
+
+            //Display to user menu of stores they manage
+            try{
+               query = String.format("SELECT * FROM STORE WHERE managerID = '%s'", userID);
+               List<List<String>> theResult = esql.executeQueryAndReturnResult(query);
+               System.out.println("Store ID\tStore Name");
+               for(int i = 0; i < theResult.size(); i++) {
+                  System.out.println(theResult.get(i).get(0) + "\t\t" + theResult.get(i).get(1));
+               }
+            }
+            catch(Exception e){
+                  System.err.println (e.getMessage ());
+            }
+
+            System.out.print("Enter store ID from the above list of stores: ");
+            do{
+               try{
+                  storeID = in.readLine();
+                  query = String.format("SELECT * FROM STORE WHERE storeID = '%s' AND managerID = '%s'", storeID, userID);
+                  result = esql.executeQuery(query);
+                  if(result <= 0){
+                     System.out.print("Store ID does not exist. Please enter a valid store ID: ");
+                  }else{
+                     break;
+                  }
+               }
+               catch(Exception e){
+                  System.err.println (e.getMessage ());
+               }
+            }while(true);
             System.out.print("\tEnter Product Name: ");
             String productName = in.readLine();
             System.out.print("\tEnter Number of Units: ");
@@ -606,7 +639,7 @@ public class Retail {
             String warehouseID = in.readLine();
 
             //Need query to update Entry in Product Table with additional units
-            String query = String.format("UPDATE PRODUCT SET numberOfUnits = numberOfUnits + %d WHERE storeID = '%s' AND productName = '%s'", numUnits, storeID, productName);
+            query = String.format("UPDATE PRODUCT SET numberOfUnits = numberOfUnits + %d WHERE storeID = '%s' AND productName = '%s'", numUnits, storeID, productName);
             try{
                System.out.println("\tAbout to add additional units!\n");
                esql.executeUpdate(query);
