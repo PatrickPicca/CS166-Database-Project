@@ -505,7 +505,10 @@ public class Retail {
          System.err.println (e.getMessage ());
       }
    }
-   public static void viewRecentOrders(Retail esql) {}
+   public static void viewRecentOrders(Retail esql) 
+   {
+
+   }
    public static void updateProduct(Retail esql) {}
 
    /*
@@ -589,7 +592,52 @@ public class Retail {
    */
    public static void placeProductSupplyRequests(Retail esql) 
    {
-      //
+      if (userType.contains("manager"))
+      {
+         try{
+            System.out.print("\tEnter store ID: ");
+            String storeID = in.readLine();
+            System.out.print("\tEnter Product Name: ");
+            String productName = in.readLine();
+            System.out.print("\tEnter Number of Units: ");
+            String theunits = in.readLine();
+            int numUnits = Integer.parseInt(theunits);
+            System.out.print("\tEnter Warehouse ID: ");
+            String warehouseID = in.readLine();
+
+            //Need query to update Entry in Product Table with additional units
+            String query = String.format("UPDATE PRODUCT SET numberOfUnits = numberOfUnits + %d WHERE storeID = '%s' AND productName = '%s'", numUnits, storeID, productName);
+            try{
+               System.out.println("\tAbout to add additional units!\n");
+               esql.executeUpdate(query);
+               System.out.println("\tAdditional units added!\n");
+            }catch(Exception e){
+               System.err.println (e.getMessage ());
+            }
+            //Need query to add Entry into ProductSupplyRequests table
+            query = String.format("INSERT INTO ProductSupplyRequests(managerID, warehouseID, storeID, productName, unitsRequested) Values ('%s', '%s', '%s', '%s', %d)", userID, warehouseID, storeID, productName, numUnits);
+            try{
+               System.out.println("\tAbout to place supply request!\n");
+               esql.executeUpdate(query);
+               System.out.println("\tRequest history updated!\n");
+            }catch(Exception e){
+               System.err.println (e.getMessage ());
+            }      
+
+
+            //String query = String.format("SELECT P.productName, P.storeID, P.managerID, P.updateNumber, P.updatedOn FROM ProductUpdates P  WHERE P.storeID IN ( SELECT S.storeID FROM Store S WHERE S.managerID = %s) ORDER BY P.updatedOn DESC LIMIT 5", userID);
+            //List<List<String>> result = esql.executeQueryAndReturnResult(query);
+            //System.out.println("Product Name\t\tStore ID\t\tManager ID\tUpdate Number\tUpdated ON");
+            //for(int i = 0; i < result.size(); i++) {
+
+            //   System.out.println(result.get(i).get(0) + "\t" + result.get(i).get(1) + "\t\t" + result.get(i).get(2)  + "\t\t" + result.get(i).get(3)  + "\t\t" + result.get(i).get(4));
+           // }
+           // System.out.println("\n");
+         }catch(Exception e){
+            
+            System.err.println (e.getMessage ());
+         }
+      }
 
       
    }
