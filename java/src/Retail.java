@@ -290,6 +290,9 @@ public class Retail {
                 System.out.println("8. View 5 Popular Customers");
                 System.out.println("9. Place Product Supply Request to Warehouse");
                 System.out.println("10. View all Orders");
+                System.out.println("11. View User Info");
+                System.out.println("12. Update User Info");
+                System.out.println("13. View all Products");
 
                //The following functionalities basically used by admins
                 //System.out.println("15. Update Product Info ");
@@ -309,6 +312,10 @@ public class Retail {
 
 
                    case 10: viewAllOrders(esql); break;
+                   case 11: viewUserInfo(esql); break;
+                   case 12: updateUserInfo(esql); break;
+                   case 13: viewAllProducts(esql); break;
+                  
 
                    //case 15: updateProductInfo(esql); break;
 
@@ -533,7 +540,7 @@ public class Retail {
       }
    }
    public static void updateProduct(Retail esql) {
-      if(!userType.contains("manager") || !userType.contains("admin")) {
+      if(!userType.contains("manager") && !userType.contains("admin")) {
          System.out.println("\n\tERROR: You do not have permission to update products!\n");
          return;
       }
@@ -814,6 +821,7 @@ public class Retail {
     */
    public static void viewUserInfo(Retail esql) {}
    public static void updateUserInfo(Retail esql) {}
+
    public static void viewAllProducts(Retail esql) {
       if(!userType.contains("admin")) {
          System.out.println("\n\tERROR: You do not have permission to view all products!\n");
