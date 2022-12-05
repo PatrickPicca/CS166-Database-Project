@@ -812,8 +812,6 @@ public class Retail {
    }
    public static void updateProductInfo(Retail esql){}
 
-   public static void viewRecentOrders(Retail esql) {}
-   public static void updateProduct(Retail esql) {}
 
    /*
    Manager can see all the orders information of the store(s) he/she
