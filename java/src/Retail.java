@@ -289,8 +289,11 @@ public class Retail {
                 System.out.println("7. View 5 Popular Items");
                 System.out.println("8. View 5 Popular Customers");
                 System.out.println("9. Place Product Supply Request to Warehouse");
-                
-           //     System.out.println("10. View all Orders");
+                System.out.println("10. View all Orders");
+
+               //The following functionalities basically used by admins
+                //System.out.println("15. Update Product Info ");
+
                 System.out.println(".........................");
                 System.out.println("20. Log out");
                 switch (readChoice()){
@@ -303,7 +306,11 @@ public class Retail {
                    case 7: viewPopularProducts(esql); break;
                    case 8: viewPopularCustomers(esql); break;
                    case 9: placeProductSupplyRequests(esql); break;
-              //     case 10: viewAllOrders(esql); break;
+
+
+                   case 10: viewAllOrders(esql); break;
+
+                   //case 15: updateProductInfo(esql); break;
 
                    case 20: usermenu = false; break;
                    default : System.out.println("Unrecognized choice!"); break;
@@ -646,6 +653,10 @@ public class Retail {
             System.err.println (e.getMessage ());
          }
       }
+      else if (userType.contains("admin"))
+         System.out.println("\tYou do not have a store");
+      else
+         System.out.println("\tYou do not have Manager priveldges");
  
    }
    /*
@@ -670,6 +681,10 @@ public class Retail {
             System.err.println (e.getMessage ());
          }
       }
+      else if (userType.contains("admin"))
+         System.out.println("\tYou do not have a store");
+      else
+         System.out.println("\tYou do not have Manager priveldges");
    } 
    /*
    Manager can also view the top 5 customer’s information who placed the most orders in his/her store(s).
@@ -694,6 +709,10 @@ public class Retail {
             System.err.println (e.getMessage ());
          }
       }
+      else if (userType.contains("admin"))
+         System.out.println("\tYou do not have a store");
+      else
+         System.out.println("\tYou do not have Manager priveldges");
    }
 
    /* 
@@ -782,7 +801,10 @@ public class Retail {
             System.err.println (e.getMessage ());
          }
       }
-
+      else if (userType.contains("admin"))
+         System.out.println("\tYou do not have a store");
+      else
+         System.out.println("\tYou do not have Manager priveldges");
       
    }
 
@@ -791,7 +813,7 @@ public class Retail {
    products information of the database
     */
    public static void viewUserInfo(Retail esql) {}
-   public static void updateUserInfo(Retail esql){}
+   public static void updateUserInfo(Retail esql) {}
    public static void viewAllProducts(Retail esql) {
       if(!userType.contains("admin")) {
          System.out.println("\n\tERROR: You do not have permission to view all products!\n");
@@ -810,7 +832,196 @@ public class Retail {
          System.err.println (e.getMessage ());
       }
    }
-   public static void updateProductInfo(Retail esql){}
+
+
+/*
+   public static void updateProductInfo(Retail esql)
+   {
+      if (userType.contains("admin"))
+         {
+            System.out.print("\tEnter how you wish to find your product: ");
+            System.out.println("---------");
+            System.out.println("1. Store ID");
+            System.out.println("2. Product Name");
+            switch (readChoice()){     //Both options require an additional query where admin selects product by product name.
+                   case 1: //Display List of all products within store
+                        try{
+                           System.out.print("\tEnter store ID: ");
+                           String storeID;
+                           String query;
+                           do{
+                              try{
+                                 storeID = in.readLine();
+                                 query = String.format("SELECT * FROM STORE WHERE storeID = '%s'", storeID);
+                                 int result = esql.executeQuery(query);
+                                 if(result <= 0){
+                                    System.out.print("Store ID does not exist. Please enter a valid store ID: ");
+                                 }else{
+                                    break;
+                                 }
+                              }
+                              catch(Exception e){
+                                 System.err.println (e.getMessage ());
+                              }
+                           }while(true);
+                           query = String.format("SELECT * FROM PRODUCT WHERE storeID = '%s'", storeID);
+                           List<List<String>> result = esql.executeQueryAndReturnResult(query);
+                           System.out.println("\nProducts in store " + storeID + ": \n");
+                           System.out.println("Product Name\t\t\tNumber of Units\t\tPrice Per Unit");
+                           for(int i = 0; i < result.size(); i++) {
+                              System.out.println(result.get(i).get(1) + "\t" + result.get(i).get(2) + "\t\t\t" + result.get(i).get(3));
+                           }
+                           System.out.println("\n");
+
+                           //Prompt user to select the product they want to update by product name
+                           System.out.print("\tEnter Product Name for Product You Wish to Modify: ");
+                           String productName;
+                          
+                           do{
+                              try{
+                                 productName = in.readLine();
+                                 query = String.format("SELECT * FROM PRODUCT WHERE storeID = '%s' AND productName = '%s'", storeID, productName);
+                                 int theresult = esql.executeQuery(query);
+                                 if(theresult <= 0){
+                                    System.out.print("Product does not exist. Please enter a valid Product Name: ");
+                                 }else{
+                                    //Get the price per unit and the num of units
+                                    break;
+                                 }
+                              }
+                              catch(Exception e){
+                                 System.err.println (e.getMessage ());
+                              }
+                           }while(true);
+
+
+
+                           System.out.print("\tSelect Field To Modify For Selected Product: ");
+                           System.out.println("---------");
+                           System.out.println("1. Store ID");
+                           System.out.println("2. Product Name");
+                           System.out.println("3. Number of Units");
+                           System.out.println("4. Price Per Unit");
+                           switch (readChoice()){
+                              case 1:
+                                 System.out.print("\tEnter new Store ID this Product is Associated With: ");
+                                 String newStoreID;
+                                 do{
+                                    try{
+                                       newStoreID = in.readLine();
+                                       query = String.format("SELECT * FROM STORE WHERE storeID = '%s'", newStoreID);
+                                       int result2 = esql.executeQuery(query);
+                                       if(result2 <= 0){
+                                          System.out.print("Store ID does not exist. Please enter a valid store ID: ");
+                                       }else{
+                                          break;
+                                       }
+                                    }
+                                    catch(Exception e){
+                                       System.err.println (e.getMessage ());
+                                    }
+                                 }while(true);
+
+                                 query = String.format("UPDATE PRODUCT SET storeID = '%s'' WHERE storeID = '%s' AND productName = '%s'", newStoreID, storeID, productName);
+                                 try{
+                                    System.out.println("\tAbout to Update Store ID of Product!\n");
+                                    esql.executeUpdate(query);
+                                    System.out.println("\tStore ID of Product Updated!!\n");
+                                 }catch(Exception e){
+                                    System.err.println (e.getMessage ());
+                                 }
+
+                                 break;
+                              case 2:
+                                 System.out.print("\tEnter new Name this Product is Associated With: ");
+                                 String newProductName = in.readLine();
+                                 query = String.format("UPDATE Orders SET productName = '%s' WHERE productName = '%s' AND storeID = '%s'", newProductName, productName, storeID);
+                                 try{
+                                    System.out.println("\tAbout to update the product within Orders!\n");
+                                    esql.executeUpdate(query);
+                                    System.out.println("\tName of Product Updated!!\n");
+                                 }catch(Exception e){
+                                    System.err.println (e.getMessage ());
+                                 }
+
+
+
+                                 query = String.format("UPDATE PRODUCT SET productName = '%s' WHERE storeID = '%s' AND productName = '%s'", newProductName, storeID, productName);
+                                 System.out.println(query);
+                                 try{
+                                    System.out.println("\tAbout to Update Name of Product!\n");
+                                    esql.executeUpdate(query);
+                                    System.out.println("\tName of Product Updated!!\n");
+                                 }catch(Exception e){
+                                    System.err.println (e.getMessage ());
+                                 }
+                                 break;
+                              case 3:
+
+
+                                 System.out.print("\tEnter new number of units: ");
+                                 int input;
+                                 do{
+                                    try{
+                                       input = Integer.valueOf(in.readLine());
+                                       if(input < 0) {
+                                          System.out.print("\tInvalid number of units. Please enter a positive number: ");
+                                       }
+                                       else {
+                                          break;
+                                       }
+                                    }catch(Exception e){
+                                       System.err.println (e.getMessage ());
+                                    }
+                                 }while(true);
+                                 query = String.format("UPDATE PRODUCT SET numberOfUnits = %d WHERE storeID = '%s' AND productName = '%s'", input, storeID, productName);
+                                 try{
+                                    esql.executeUpdate(query);
+                                    System.out.println("\n\tProduct successfully updated!\n");
+                                 }catch(Exception e){
+                                    System.err.println (e.getMessage ());
+                                 }
+                                 break;
+                              case 4:
+                                 System.out.print("\tEnter new Price Per Unit for this Product: ");
+                                 double price = 0.0;
+                                 do{
+                                    try{
+                                          price = Double.valueOf(in.readLine());
+                                          if(price < 0) {
+                                            System.out.print("\tInvalid price. Please enter a positive number: ");
+                                          }
+                                          else {
+                                             break;
+                                          }
+                                       }catch(Exception e){
+                                          System.err.println (e.getMessage ());
+                                       }
+                                    }while(true);
+                                    query = String.format("UPDATE PRODUCT SET pricePerUnit = %f WHERE storeID = '%s' AND productName = '%s'", price, storeID, productName);
+                                 try{
+                                    esql.executeUpdate(query);
+                                    System.out.println("\n\tProduct successfully updated!\n");
+                                 }catch(Exception e){
+                                    System.err.println (e.getMessage ());
+                                 }
+                                 break;
+                              default:
+                                 break;
+                           }
+
+                        }catch(Exception e){
+                           System.err.println (e.getMessage ());
+                        }
+                     break;
+                   case 2: //Display list of all stores with that product. Requires nested search of option 1 within.
+                     break;
+                   default : System.out.println("Unrecognized choice!"); break;
+            }
+         }
+   }
+*/
+
 
 
    /*
@@ -818,7 +1029,29 @@ public class Retail {
    manages. They will be able to see orderID, customer name, storeID, productName, 
    and date of order for each order.
     */
-    public static void viewAllOrders(Retail esql){}
+    public static void viewAllOrders(Retail esql)
+    {
+         if (userType.contains("manager"))
+         {
+            try{
+               String query = String.format("SELECT O.orderNumber, O.customerID, O.storeID, O.productName, O.unitsOrdered, O.orderTime FROM ORDERS O WHERE O.storeID IN (SELECT S.storeID FROM Store S WHERE S.managerID = %s) ", userID);
+               List<List<String>> result = esql.executeQueryAndReturnResult(query);
+               System.out.println("Order Number\tCustomer ID\tStore ID\tProduct Name\t\t\tUnits Ordered\tOrder Time");
+               for(int i = 0; i < result.size(); i++) {
+
+                  System.out.println(result.get(i).get(0) + "\t\t" + result.get(i).get(1) + "\t\t" + result.get(i).get(2)  + "\t\t" + result.get(i).get(3)  + "\t" + result.get(i).get(4)  + "\t\t" + result.get(i).get(5));
+               }
+               System.out.println("\n");
+            }catch(Exception e){
+               
+               System.err.println (e.getMessage ());
+            }
+         }
+         else if (userType.contains("admin"))
+            System.out.println("\tYou do not have a store");
+         else
+            System.out.println("\tYou do not have Manager priveldges");
+    }
     
 
 
