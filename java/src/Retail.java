@@ -578,7 +578,7 @@ public class Retail {
                System.out.println(result.get(i).get(0) + "\t\t" + result.get(i).get(1)  + result.get(i).get(2)  + "\t\t" + result.get(i).get(3)  + "\t\t" + result.get(i).get(4));
             }
             System.out.println("\n");
-         }catch(Exception e){
+         }catch(Exception e){ 
             
             System.err.println (e.getMessage ());
          }
