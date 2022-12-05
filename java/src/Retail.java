@@ -169,7 +169,7 @@ public class Retail {
         List<String> record = new ArrayList<String>();
 		for (int i=1; i<=numCol; ++i)
 			record.add(rs.getString (i));
-        result.add(record);
+         result.add(record);
       }//end while
       stmt.close ();
       return result;
@@ -289,10 +289,7 @@ public class Retail {
                 System.out.println("7. View 5 Popular Items");
                 System.out.println("8. View 5 Popular Customers");
                 System.out.println("9. Place Product Supply Request to Warehouse");
-               
-                System.out.println("10. ADMIN ONLY: View User Info");
-                System.out.println("11. ADMIN ONLY: Update User Info");
-                System.out.println("12. ADMIN ONLY: Delete User");
+                
                 System.out.println(".........................");
                 System.out.println("20. Log out");
                 switch (readChoice()){
@@ -491,7 +488,7 @@ public class Retail {
       do{
          try{
             numUnits = Integer.valueOf(in.readLine());
-            if(numUnits < 0) {
+            if(numUnits < 1) {
                System.out.print("\tInvalid number of units. Please enter a positive number: ");
             }
             else {
@@ -660,6 +657,8 @@ public class Retail {
    manages. They will be able to see orderID, customer name, storeID, productName, 
    and date of order for each order.
     */
+    public static void viewAllOrders(Retail esql){}
+    
 
 
 }//end Retail
