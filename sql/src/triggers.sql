@@ -5,7 +5,7 @@ RETURNS "trigger" AS
 $BODY$
 BEGIN
     NEW.orderNumber = nextval('orders_orderNumber_seq');
-    NEW.orderTime = CURRENT_TIMESTAMP::timestamp;
+    NEW.orderTime = now()::timestamp(0);
     RETURN NEW;
 END;
 $BODY$
