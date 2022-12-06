@@ -640,7 +640,7 @@ public class Retail {
          System.err.println (e.getMessage ());
       }
       if (userType.contains("manager")){
-         query = String.format("INSERT INTO ProductUpdates(managerID, storeID, productName, updatedOn) Values ('%s', '%s', '%s', now()::timestamp(0))", userID, storeID, productName);
+         query = String.format("INSERT INTO ProductUpdates(managerID, storeID, productName) Values ('%s', '%s', '%s')", userID, storeID, productName);
          try{
             esql.executeUpdate(query);
             System.out.println("\n\tProduct Update entry made!\n");

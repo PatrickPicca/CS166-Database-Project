@@ -59,7 +59,7 @@ END;
 $BODY$
 LANGUAGE plpgsql VOLATILE;
 
-DROP TRIGGER IF EXISTS product_update_number_trigger ON ProductUpdates CASCADE;
+DROP TRIGGER IF EXISTS product_update_number_trigger ON ProductUpdates;
 CREATE TRIGGER product_update_number_trigger
 BEFORE INSERT
 ON ProductUpdates
