@@ -36,3 +36,23 @@ BEFORE INSERT
 ON Users
 FOR EACH ROW
 EXECUTE PROCEDURE set_new_user_id();
+
+--Trigger for new product updates
+CREATE OR REPLACE LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION set_new_product_update_number()
+RETURNS "trigger" AS
+$BODY$
+BEGIN
+    NEW.updateNumber = nextval('productupdates_updateNumber_seq');
+    NEW.updatedOn = now()::timestamp(0);
+    RETURN NEW;
+END;
+$BODY$
+LANGUAGE plpgsql VOLATILE;
+
+DROP TRIGGER IF EXISTS product_update_number_trigger ON ProductUpdates;
+CREATE TRIGGER product_update_number_trigger
+BEFORE INSERT
+ON ProductUpdates
+FOR EACH ROW
+EXECUTE PROCEDURE set_new_product_update_number();

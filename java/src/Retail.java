@@ -639,6 +639,19 @@ public class Retail {
       }catch(Exception e){
          System.err.println (e.getMessage ());
       }
+      if (userType.contains("manager")){
+         query = String.format("INSERT INTO ProductUpdates(managerID, storeID, productName, updatedOn) Values ('%s', '%s', '%s', now()::timestamp(0))", userID, storeID, productName);
+         try{
+            esql.executeUpdate(query);
+            System.out.println("\n\tProduct Update entry made!\n");
+            query = String.format("SELECT * FROM ProductUpdates ORDER BY updateNumber DESC LIMIT 1");
+            List<List<String>> result2 = esql.executeQueryAndReturnResult(query);
+            System.out.println("Update Number\tManager ID\tStore ID\t\tProduct Name\t\t\tUpdated On");
+            System.out.println(result2.get(0).get(0) + "\t\t" + result2.get(0).get(1) + "\t\t" +result2.get(0).get(2) + "\t\t\t" + result2.get(0).get(3) + "\t" + result2.get(0).get(4) );
+         }catch(Exception e){
+            System.err.println (e.getMessage ());
+         }
+      }
    }
 
    /*
