@@ -289,8 +289,14 @@ public class Retail {
                 System.out.println("7. View 5 Popular Items");
                 System.out.println("8. View 5 Popular Customers");
                 System.out.println("9. Place Product Supply Request to Warehouse");
-                
-           //     System.out.println("10. View all Orders");
+                System.out.println("10. View all Orders");
+                System.out.println("11. View User Info");
+                System.out.println("12. Update User Info");
+                System.out.println("13. View all Products");
+
+               //The following functionalities basically used by admins
+                //System.out.println("15. Update Product Info ");
+
                 System.out.println(".........................");
                 System.out.println("20. Log out");
                 switch (readChoice()){
@@ -534,7 +540,7 @@ public class Retail {
       }
    }
    public static void updateProduct(Retail esql) {
-      if(!userType.contains("manager") || !userType.contains("admin")) {
+      if(!userType.contains("manager") && !userType.contains("admin")) {
          System.out.println("\n\tERROR: You do not have permission to update products!\n");
          return;
       }
@@ -657,6 +663,10 @@ public class Retail {
             System.err.println (e.getMessage ());
          }
       }
+      else if (userType.contains("admin"))
+         System.out.println("\tYou do not have a store");
+      else
+         System.out.println("\tYou do not have Manager priveldges");
  
    }
    /*
@@ -681,6 +691,10 @@ public class Retail {
             System.err.println (e.getMessage ());
          }
       }
+      else if (userType.contains("admin"))
+         System.out.println("\tYou do not have a store");
+      else
+         System.out.println("\tYou do not have Manager priveldges");
    } 
    /*
    Manager can also view the top 5 customer’s information who placed the most orders in his/her store(s).
@@ -705,6 +719,10 @@ public class Retail {
             System.err.println (e.getMessage ());
          }
       }
+      else if (userType.contains("admin"))
+         System.out.println("\tYou do not have a store");
+      else
+         System.out.println("\tYou do not have Manager priveldges");
    }
 
    /* 
@@ -801,7 +819,10 @@ public class Retail {
             System.err.println (e.getMessage ());
          }
       }
-
+      else if (userType.contains("admin"))
+         System.out.println("\tYou do not have a store");
+      else
+         System.out.println("\tYou do not have Manager priveldges");
       
    }
 
@@ -960,6 +981,7 @@ public class Retail {
       }while(true);
    }
 
+
    public static void viewAllProducts(Retail esql) {
       if(!userType.contains("admin")) {
          System.out.println("\n\tERROR: You do not have permission to view all products!\n");
@@ -979,13 +1001,34 @@ public class Retail {
       }
    }
 
-
    /*
    Manager can see all the orders information of the store(s) he/she
    manages. They will be able to see orderID, customer name, storeID, productName, 
    and date of order for each order.
     */
-    public static void viewAllOrders(Retail esql){}
+    public static void viewAllOrders(Retail esql)
+    {
+         if (userType.contains("manager"))
+         {
+            try{
+               String query = String.format("SELECT O.orderNumber, O.customerID, O.storeID, O.productName, O.unitsOrdered, O.orderTime FROM ORDERS O WHERE O.storeID IN (SELECT S.storeID FROM Store S WHERE S.managerID = %s) ", userID);
+               List<List<String>> result = esql.executeQueryAndReturnResult(query);
+               System.out.println("Order Number\tCustomer ID\tStore ID\tProduct Name\t\t\tUnits Ordered\tOrder Time");
+               for(int i = 0; i < result.size(); i++) {
+
+                  System.out.println(result.get(i).get(0) + "\t\t" + result.get(i).get(1) + "\t\t" + result.get(i).get(2)  + "\t\t" + result.get(i).get(3)  + "\t" + result.get(i).get(4)  + "\t\t" + result.get(i).get(5));
+               }
+               System.out.println("\n");
+            }catch(Exception e){
+               
+               System.err.println (e.getMessage ());
+            }
+         }
+         else if (userType.contains("admin"))
+            System.out.println("\tYou do not have a store");
+         else
+            System.out.println("\tYou do not have Manager priveldges");
+    }
     
 
 
