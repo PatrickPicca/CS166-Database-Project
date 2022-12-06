@@ -36,22 +36,3 @@ BEFORE INSERT
 ON Users
 FOR EACH ROW
 EXECUTE PROCEDURE set_new_user_id();
-
---Trigger for new request number
-CREATE OR REPLACE LANGUAGE plpgsql;
-CREATE OR REPLACE FUNCTION set_new_request_num() 
-RETURNS "trigger" AS 
-$BODY$
-BEGIN
-    NEW.requestNumber = nextval('productsupplyrequests_requestNumber_seq');
-    RETURN NEW;
-END;
-$BODY$
-LANGUAGE plpgsql VOLATILE;
-
-DROP TRIGGER IF EXISTS request_num_trigger ON ProductSupplyRequests;
-CREATE TRIGGER request_num_trigger
-BEFORE INSERT
-ON ProductSupplyRequests
-FOR EACH ROW
-EXECUTE PROCEDURE set_new_request_num();
