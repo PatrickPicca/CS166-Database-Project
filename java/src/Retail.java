@@ -544,9 +544,22 @@ public class Retail {
          System.out.println("\n\tERROR: You do not have permission to update products!\n");
          return;
       }
+      String query = "";
+       //Display to user menu of stores they manage
+            try{
+               query = String.format("SELECT * FROM STORE WHERE managerID = '%s'", userID);
+               List<List<String>> theResult = esql.executeQueryAndReturnResult(query);
+               System.out.println("Store ID\tStore Name");
+               for(int i = 0; i < theResult.size(); i++) {
+                  System.out.println(theResult.get(i).get(0) + "\t\t" + theResult.get(i).get(1));
+               }
+            }
+            catch(Exception e){
+                  System.err.println (e.getMessage ());
+            }
+
       System.out.print("\tEnter store ID: ");
       String storeID = "";
-      String query = "";
       int result = 0;
       do{
          try{
